@@ -24,7 +24,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           echo "DOCKER_BUILDKIT=1" >> $GITHUB_ENV
-          docker build . --tag ghcr.io/niidme/niid-ai-api:latest
+          docker build -f Dockerfile . --tag ghcr.io/niidme/niid-ai-api:latest
           docker push ghcr.io/niidme/niid-ai-api:latest
 
   deploy:
