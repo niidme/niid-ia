@@ -11,7 +11,7 @@ WORKDIR /build
 RUN apk add --no-cache gcc musl-dev libffi-dev
 
 # Copy the requirements file first to leverage Docker cache
-COPY requirements.txt /build/
+COPY app/requirements.txt /build/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip && \
@@ -30,7 +30,7 @@ COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy the app directory contents into the container at /app
-COPY . /app
+COPY app /app
 
 # Install ffmpeg, create a temporary directory and set permissions for it, and create a non-root user
 RUN apk add --no-cache ffmpeg && \
