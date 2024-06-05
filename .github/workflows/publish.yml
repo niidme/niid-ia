@@ -1,0 +1,65 @@
+name: Deploy NIID AI API to Production Server
+
+on:
+  push:
+    branches: ["main"]
+  
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  create-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_NIID_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          echo "DOCKER_BUILDKIT=1" >> $GITHUB_ENV
+          docker build . --tag ghcr.io/niidme/niid-ai-api:latest
+          docker push ghcr.io/niidme/niid-ai-api:latest
+
+  deploy:
+    needs: create-docker-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.NIID_PAR_01_SSH_HOST }}
+          username: ${{ secrets.NIID_PAR_01_SSH_USER }}
+          password: ${{ secrets.NIID_PAR_01_SSH_KEY }}
+          script: |
+            echo "Attempting to log into GHCR..."
+            echo ${{ secrets.GH_NIID_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo "Docker login successful."
+            
+            # Stop and remove the container if it exists, even if it's stopped
+            if docker ps -a | grep -q niid-ai-api-container; then
+              echo "Container exists, stopping and removing..."
+              docker stop niid-ai-api-container
+              docker rm niid-ai-api-container
+            fi
+            echo "Attempting to pull the Docker image..."
+            docker pull ghcr.io/niidme/niid-ai-api:latest
+            echo "Docker pull successful."
+            
+            echo "Running new container..."
+            docker run -d --name niid-ai-api-container -p 8020:8020 ghcr.io/niidme/niid-ai-api:latest
+
+      - name: Send Chat Message
+        uses: google-github-actions/send-google-chat-webhook@v0.0.2
+        with:
+          webhook_url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+          mention: "<users/all>"
