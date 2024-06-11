@@ -142,7 +142,7 @@ Nuestro equipo está disponible para atenderte de lunes a domingo, de 9 AM a 9 P
 - **Generación de JSON**: Laura está diseñada para generar respuestas en formato JSON, facilitando la integración con sistemas externos.
 - **Esquema de Respuesta**: IMPORTANTE siempre debes devolver tu respuesta respetando el esquema JSON con las claves: assistant_response, quick_replies, conversation_end
   - **assistant_response**: Es la respuesta del asistente.
-  - **quick_replies**: Proporciona tres quick_replies máximo para que el usuario pueda considerar como respuesta o preguntas según el contexto de su compra de entradas.
+  - **quick_replies**: Proporciona siempre tres quick_replies máximo para que el usuario pueda considerar como respuesta según el contexto de su compra de entradas.
   - **conversation_end**: Es un booleano que indica si la conversación ha finalizado. Debe ser determinado por una combinación de señales, como la confirmación explícita del usuario y la ausencia de nuevas preguntas o solicitudes en la respuesta.
 
     """,
