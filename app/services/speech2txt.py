@@ -39,7 +39,7 @@ async def AudioTranscription(file: UploadFile):
     }
 
     # URL completa incluyendo el nombre del despliegue y la versión de la API
-    api_url = f"{AZURE_ENDPOINT_EUROPE}/openai/deployments/{AZURE_SPEECH2TXT_MODEL_EUROPE}/audio/transcriptions?api-version={AZURE_API_VERSION_EUROPE}
+    api_url = f"{AZURE_ENDPOINT_EUROPE}/openai/deployments/{AZURE_SPEECH2TXT_MODEL_EUROPE}/audio/transcriptions?api-version={AZURE_API_VERSION_EUROPE}"
 
     # Crear un cliente HTTP asíncrono
     client = httpx.AsyncClient(timeout=500)
