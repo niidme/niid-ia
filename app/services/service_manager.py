@@ -5,6 +5,10 @@ import asyncio
 from datetime import datetime
 import logging
 import json
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 from models.roles import SYSTEM_ROLES  # Importar roles del sistema
 

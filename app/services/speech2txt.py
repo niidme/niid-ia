@@ -14,6 +14,7 @@ load_dotenv()
 AZURE_API_KEY_EUROPE = os.getenv("AZURE_API_KEY_EUROPE")
 AZURE_ENDPOINT_EUROPE = os.getenv("AZURE_ENDPOINT_EUROPE")
 AZURE_SPEECH2TXT_MODEL_EUROPE = os.getenv("AZURE_SPEECH2TXT_MODEL_EUROPE")
+AZURE_API_VERSION_EUROPE = os.getenv("AZURE_API_VERSION_EUROPE")
 
 
 async def AudioTranscription(file: UploadFile):
@@ -38,7 +39,7 @@ async def AudioTranscription(file: UploadFile):
     }
 
     # URL completa incluyendo el nombre del despliegue y la versión de la API
-    api_url = f"{AZURE_ENDPOINT_EUROPE}/openai/deployments/{AZURE_SPEECH2TXT_MODEL_EUROPE}/audio/transcriptions?api-version=2023-09-01-preview"
+    api_url = f"{AZURE_ENDPOINT_EUROPE}/openai/deployments/{AZURE_SPEECH2TXT_MODEL_EUROPE}/audio/transcriptions?api-version={AZURE_API_VERSION_EUROPE}
 
     # Crear un cliente HTTP asíncrono
     client = httpx.AsyncClient(timeout=500)
