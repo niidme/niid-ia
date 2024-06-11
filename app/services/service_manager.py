@@ -16,8 +16,8 @@ API_KEY = str(os.getenv('AZURE_API_KEY_EAST_US'))
 API_BASE = str(os.getenv('AZURE_ENDPOINT_EAST_US'))
 API_VERSION = str(os.getenv('AZURE_API_VERSION_EAST_US'))
 DEPLOYMENT_NAME = str(os.getenv('AZURE_AI_MODEL_EAST_US'))
-TEMPERATURE_MODEL = float(os.getenv('TEMPERATURE_MODEL'))
-MAX_TOKENS_MODEL = int(os.getenv('MAX_TOKENS_MODEL'))
+TEMPERATURE_MODEL = float(os.getenv('TEMPERATURE_SERVICE_MODEL'))
+MAX_TOKENS_MODEL = int(os.getenv('MAX_TOKENS_SERVICE_MODEL'))
 
 MODEL_URL = f'{API_BASE}/openai/deployments/{DEPLOYMENT_NAME}/chat/completions?api-version={API_VERSION}'
 
