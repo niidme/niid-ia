@@ -42,19 +42,10 @@ async def handle_service_request(service: str = Path(..., description="Categorí
 
     for attempt in range(max_retries):
         try:
-            respuesta_obj = await asistente.enviar_peticion(user_prompt.user_id, user_prompt.user_input)
-            logging.info(f"Respuesta recibida: {respuesta_obj}")
-            if 'error' in respuesta_obj:
-                raise Exception(respuesta_obj['error'])
-            return JSONResponse(content=respuesta_obj)  # Retorna la respuesta si tiene éxito
-        except json.JSONDecodeError as e:
-            logging.error(f'Error de decodificación JSON en intento {attempt + 1}: {str(e)}')
-            if attempt < max_retries - 1:  # Verifica si no es el último intento
-                await asyncio.sleep(retry_delay)  # Espera antes del próximo intento
-            else:
-                raise HTTPException(status_code=500, detail=f'Error de decodificación JSON: {str(e)}')
+            respuesta_str = await asistente.enviar_peticion(user_prompt.user_id, user_prompt.user_input)
+            respuesta_obj = json.loads(respuesta_str)
+            return respuesta_obj  # Retorna la respuesta si tiene éxito
         except Exception as e:
-            logging.error(f'Intento {attempt + 1} fallido: {str(e)}')
             if attempt < max_retries - 1:  # Verifica si no es el último intento
                 await asyncio.sleep(retry_delay)  # Espera antes del próximo intento
             else:
