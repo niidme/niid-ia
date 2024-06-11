@@ -64,6 +64,7 @@ class AsistenteDeServicioAsync:
         messages = await self.crear_mensajes(user_id, user_input)
         body = {
             'messages': messages,
+            'temperature': 0.2,  # Temperatura de muestreo de 0.0 a 1.0
             'max_tokens': 1000,  # Ajustar la cantidad de tokens si es necesario
             'response_format': { "type": "json_object" }  # Especificar el formato de respuesta JSON
         }
