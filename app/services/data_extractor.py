@@ -15,7 +15,7 @@ API_KEY = 'e495c745c0e8440684691813da4fd312'
 API_BASE = 'https://niid-ai-east-us.openai.azure.com'
 API_VERSION = '2024-04-01-preview'
 DEPLOYMENT_NAME = 'niid-gpt-4o'
-TEMPERATURE_MODEL = '0.7'
+TEMPERATURE_MODEL = '0.2'
 
 class ExtractorDeInformacionAsync:
     def __init__(self, service):
@@ -59,7 +59,8 @@ class ExtractorDeInformacionAsync:
                     'role': 'user',
                     'content': texto
                 }
-            ]
+            ],
+            'response_format': { "type": "json_object" }  # Especificar el formato de respuesta JSON
         }
 
         # Construir la URL para la petición
@@ -73,10 +74,8 @@ class ExtractorDeInformacionAsync:
                     # Imprimir la respuesta completa para depuración
                     print("Respuesta completa de la API:", data)
                     try:
-                        # Eliminar el bloque de código Markdown
+                        # Directamente parsear el contenido como JSON
                         content = data['choices'][0]['message']['content']
-                        if content.startswith("```json") and content.endswith("```"):
-                            content = content[7:-3].strip()
                         response_data = json.loads(content)
                         # Asegurar que el travel_type es el especificado en la llamada de extracción
                         response_data['travel_type'] = travel_type
