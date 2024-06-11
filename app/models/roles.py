@@ -194,7 +194,8 @@ EXTRACTOR_SYSTEM_ROLE_TRAVEL = """
         seat_preference, 
         travel_requirements, 
         additional_notes, 
-        request_summary
+        request_summary,
+        title_of_request,
       }.
     - **Sin Dato:** Si no se proporciona un dato específico, el valor correspondiente en el JSON debe ser `null`.
     - **Responde en el idioma del usuario, si es posible.**
