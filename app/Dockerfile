@@ -31,9 +31,6 @@ RUN apk add --no-cache tzdata
 # Set timezone to Europe/Madrid
 ENV TZ=Europe/Madrid
 
-# Install bash
-RUN apk add --no-cache bash
-
 # Copy the built python dependencies
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
