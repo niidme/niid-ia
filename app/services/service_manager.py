@@ -8,15 +8,16 @@ import json
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
 from models.roles import SYSTEM_ROLES  # Importar roles del sistema
 
-# Variables configurables hardcodeadas //TODO: Cambiar a variables de entorno
-API_KEY = 'e495c745c0e8440684691813da4fd312'
-API_BASE = 'https://niid-ai-east-us.openai.azure.com'
-API_VERSION = '2024-04-01-preview'
-DEPLOYMENT_NAME = 'niid-gpt-4o'
+load_dotenv()
+
+API_KEY = os.getenv('AZURE_API_KEY_EAST_US')
+API_BASE = os.getenv('AZURE_ENDPOINT_EAST_US')
+API_VERSION = os.getenv('AZURE_API_VERSION_EAST_US')
+DEPLOYMENT_NAME = os.getenv('AZURE_AI_MODEL_EAST_US')
+TEMPERATURE_MODEL = os.getenv('TEMPERATURE_MODEL')
+MAX_TOKENS_MODEL = os.getenv('MAX_TOKENS_MODEL')
 
 MODEL_URL = f'{API_BASE}/openai/deployments/{DEPLOYMENT_NAME}/chat/completions?api-version={API_VERSION}'
 
@@ -68,8 +69,8 @@ class AsistenteDeServicioAsync:
         messages = await self.crear_mensajes(user_id, user_input)
         body = {
             'messages': messages,
-            'temperature': 0.2,  # Temperatura de muestreo de 0.0 a 1.0
-            'max_tokens': 1000,  # Ajustar la cantidad de tokens si es necesario
+            'temperature': TEMPERATURE_MODEL,
+            'max_tokens': MAX_TOKENS_MODEL,
             'response_format': { "type": "json_object" }  # Especificar el formato de respuesta JSON
         }
         url = MODEL_URL

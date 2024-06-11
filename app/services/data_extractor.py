@@ -1,6 +1,8 @@
 import aiohttp
 import json
 from datetime import datetime
+import os
+from dotenv import load_dotenv
 
 # Importa o define los roles del sistema para cada servicio
 from models.roles import (
@@ -10,12 +12,14 @@ from models.roles import (
     EXTRACTOR_SYSTEM_ROLE_EVENTS
 )
 
-# Variables configurables hardcodeadas // TODO: Cambiar a variables de entorno
-API_KEY = 'e495c745c0e8440684691813da4fd312'
-API_BASE = 'https://niid-ai-east-us.openai.azure.com'
-API_VERSION = '2024-04-01-preview'
-DEPLOYMENT_NAME = 'niid-gpt-4o'
-TEMPERATURE_MODEL = '0.2'
+load_dotenv()
+
+API_KEY = os.getenv('AZURE_API_KEY_EAST_US')
+API_BASE = os.getenv('AZURE_ENDPOINT_EAST_US')
+API_VERSION = os.getenv('AZURE_API_VERSION_EAST_US')
+DEPLOYMENT_NAME = os.getenv('AZURE_AI_MODEL_EAST_US')
+TEMPERATURE_MODEL = os.getenv('TEMPERATURE_MODEL')
+MAX_TOKENS_MODEL = os.getenv('MAX_TOKENS_MODEL')
 
 class ExtractorDeInformacionAsync:
     def __init__(self, service):
@@ -60,8 +64,8 @@ class ExtractorDeInformacionAsync:
                     'content': texto
                 }
             ],
-            'temperature': 0.2,
-            'max_tokens': 1000,
+            'temperature': TEMPERATURE_MODEL,
+            'max_tokens': MAX_TOKENS_MODEL,
             'response_format': { "type": "json_object" }  # Especificar el formato de respuesta JSON
         }
 
