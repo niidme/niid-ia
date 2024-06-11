@@ -109,9 +109,10 @@ async def extract_information_endpoint(
     try:
         # Utilizamos get_service_assistant para obtener la instancia del asistente
         assistant = get_service_assistant(service, service_type)
-        
+
         # Verificar si existe una conversación para el usuario
         conversation = assistant.conversaciones.get(user_id)
+
         if conversation is None:
             raise HTTPException(status_code=404, detail=f"Conversación para el usuario '{user_id}' no encontrada")
 
@@ -119,7 +120,7 @@ async def extract_information_endpoint(
         filtered_conversation = " ".join([message['content'] for message in conversation if message['role'] != 'system'])
 
         # Log de inicio de extracción
-        logger.info(f"Extrayendo información para el servicio {service}, tipo {service_type} y el usuario {user_id}...")
+        #logger.info(f"Extrayendo información para el servicio {service}, tipo {service_type} y el usuario {user_id}...")
 
         # Inicialización y uso del extractor de información
         extractor = ExtractorDeInformacionAsync(service)
@@ -127,7 +128,7 @@ async def extract_information_endpoint(
         filtered_conversation = f"{service_type} {filtered_conversation}"
         extracted_information = await extractor.obtener_informacion(filtered_conversation)
         # Log de información extraída
-        logger.info(f"Información extraída para el servicio {service}, tipo {service_type} y el usuario {user_id} - Información: {extracted_information}")
+        #logger.info(f"Información extraída para el servicio {service}, tipo {service_type} y el usuario {user_id} - Información: {extracted_information}")
 
         return JSONResponse(status_code=200, content={"data": extracted_information})
     

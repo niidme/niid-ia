@@ -1,4 +1,3 @@
-# services/data_extractor.py
 import aiohttp
 import json
 from datetime import datetime
@@ -61,6 +60,8 @@ class ExtractorDeInformacionAsync:
                     'content': texto
                 }
             ],
+            'temperature': 0.2,
+            'max_tokens': 1000,
             'response_format': { "type": "json_object" }  # Especificar el formato de respuesta JSON
         }
 
@@ -73,7 +74,6 @@ class ExtractorDeInformacionAsync:
                 if response.status == 200:
                     data = await response.json()
                     # Imprimir la respuesta completa para depuración
-                    print("Respuesta completa de la API:", data)
                     try:
                         # Directamente parsear el contenido como JSON
                         content = data['choices'][0]['message']['content']
@@ -86,5 +86,4 @@ class ExtractorDeInformacionAsync:
                 else:
                     error_text = await response.text()
                     # Imprimir el texto de error para depuración
-                    print("Error en la petición:", error_text)
                     return {'error': f'Error en la petición: {response.status}', 'response_text': error_text}

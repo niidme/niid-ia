@@ -86,15 +86,16 @@ async def extract_information_endpoint(
         filtered_conversation = " ".join([message['content'] for message in conversation if message['role'] != 'system'])
 
         # Log de inicio de extracción
-        logging.info(f"Extrayendo información para el servicio {service}, tipo {service_type} y el usuario {user_id}...")
+        #logging.info(f"Extrayendo información para el servicio {service}, tipo {service_type} y el usuario {user_id}...")
 
         # Inicialización y uso del extractor de información
         extractor = ExtractorDeInformacionAsync(service)
-        extracted_information = await extractor.obtener_informacion(filtered_conversation, service_type)  # Pasar el travel_type correctamente
+        # Asegurarnos de que pasamos el tipo de servicio correctamente
+        extracted_information = await extractor.obtener_informacion(filtered_conversation, service_type)
         # Log de información extraída
         logging.info(f"Información extraída para el servicio {service}, tipo {service_type} y el usuario {user_id} - Información: {extracted_information}")
 
-        return JSONResponse(status_code=200, content=extracted_information)
+        return JSONResponse(status_code=200, content={"data": extracted_information})
     
     except Exception as e:
         # Log de error

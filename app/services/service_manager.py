@@ -75,7 +75,7 @@ class AsistenteDeServicioAsync:
                 async with session.post(url, headers=self.headers, json=body, timeout=120) as response:
                     if response.status == 200:
                         response_data = await response.json()
-                        logging.info(f'Respuesta de la API: {response_data}')
+                        #logging.info(f'Respuesta de la API: {response_data}')
                         
                         # Directamente usar el contenido de la respuesta como JSON
                         message_content = response_data['choices'][0]['message']['content']
