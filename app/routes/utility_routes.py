@@ -109,7 +109,9 @@ async def extract_information_endpoint(
     try:
         # Utilizamos get_service_assistant para obtener la instancia del asistente
         assistant = get_service_assistant(service, service_type)
-        
+        # SI SERVICIO NO SE HA ESPECIFICADO POR DEFECTO profesional
+        if assistant is None:
+            assistant = get_service_assistant("profesional", service_type)
         # Verificar si existe una conversación para el usuario
         conversation = assistant.conversaciones.get(user_id)
         if conversation is None:
