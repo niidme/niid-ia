@@ -1,3 +1,5 @@
+# services/service_manager.py
+
 import aiohttp
 import asyncio
 from datetime import datetime
@@ -62,7 +64,8 @@ class AsistenteDeServicioAsync:
         messages = await self.crear_mensajes(user_id, user_input)
         body = {
             'messages': messages,
-            'max_tokens': 1000  # Ajustar la cantidad de tokens si es necesario
+            'max_tokens': 1000,  # Ajustar la cantidad de tokens si es necesario
+            'response_format': { "type": "json_object" }  # Especificar el formato de respuesta JSON
         }
         url = MODEL_URL
 
@@ -72,46 +75,24 @@ class AsistenteDeServicioAsync:
                     if response.status == 200:
                         response_data = await response.json()
                         logging.info(f'Respuesta de la API: {response_data}')
+                        
+                        # Directamente usar el contenido de la respuesta como JSON
                         message_content = response_data['choices'][0]['message']['content']
+                        structured_response = json.loads(message_content)
                         
-                        # Intentar extraer el JSON incrustado en el contenido del mensaje
-                        assistant_response = message_content
-                        quick_replies = []
-                        conversation_end = False
-                        
-                        if '```json' in message_content:
-                            try:
-                                json_start = message_content.index('```json') + 7
-                                json_end = message_content.rindex('```')
-                                embedded_json = message_content[json_start:json_end].strip()
-                                parsed_json = json.loads(embedded_json)
-                                assistant_response = parsed_json.get("assistant_response", assistant_response)
-                                quick_replies = parsed_json.get("quick_replies", [])
-                                conversation_end = parsed_json.get("conversation_end", False)
-                            except (ValueError, json.JSONDecodeError) as e:
-                                logging.error(f'Error de decodificación JSON incrustado: {e}')
-
                         await self.agregar_mensaje(user_id, {
                             'role': 'assistant',
-                            'content': assistant_response
+                            'content': structured_response.get("assistant_response")
                         })
                         
-                        # Estructurar la respuesta en el formato requerido
-                        structured_response = {
-                            "assistant_response": assistant_response,
-                            "quick_replies": quick_replies,
-                            "conversation_end": conversation_end
-                        }
-                        
-                        return json.dumps(structured_response)  # Devolver el JSON estructurado
+                        return structured_response  # Devolver el JSON estructurado
                     else:
                         error_text = await response.text()
                         logging.error(f'Error en la respuesta de la API: {response.status} - {error_text}')
-                        return json.dumps({'error': f'Error: {response.status} - {error_text}'})
+                        return {'error': f'Error: {response.status} - {error_text}'}
             except asyncio.TimeoutError:
                 logging.error('La petición ha superado el tiempo máximo de espera.')
-                return json.dumps({'error': 'La petición ha superado el tiempo máximo de espera.'})
+                return {'error': 'La petición ha superado el tiempo máximo de espera.'}
             except Exception as e:
                 logging.error(f'Error inesperado: {str(e)}')
-                return json.dumps({'error': f'Error inesperado: {str(e)}'})
-
+                return {'error': f'Error inesperado: {str(e)}'}
