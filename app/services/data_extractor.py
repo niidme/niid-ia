@@ -14,12 +14,12 @@ from models.roles import (
 
 load_dotenv()
 
-API_KEY = os.getenv('AZURE_API_KEY_EAST_US')
-API_BASE = os.getenv('AZURE_ENDPOINT_EAST_US')
-API_VERSION = os.getenv('AZURE_API_VERSION_EAST_US')
-DEPLOYMENT_NAME = os.getenv('AZURE_AI_MODEL_EAST_US')
-TEMPERATURE_MODEL = os.getenv('TEMPERATURE_MODEL')
-MAX_TOKENS_MODEL = os.getenv('MAX_TOKENS_MODEL')
+API_KEY = str(os.getenv('AZURE_API_KEY_EAST_US'))
+API_BASE = str(os.getenv('AZURE_ENDPOINT_EAST_US'))
+API_VERSION = str(os.getenv('AZURE_API_VERSION_EAST_US'))
+DEPLOYMENT_NAME = str(os.getenv('AZURE_AI_MODEL_EAST_US'))
+TEMPERATURE_MODEL = float(os.getenv('TEMPERATURE_MODEL'))
+MAX_TOKENS_MODEL = int(os.getenv('MAX_TOKENS_MODEL'))
 
 class ExtractorDeInformacionAsync:
     def __init__(self, service):
