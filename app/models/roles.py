@@ -52,7 +52,6 @@ Puedes emitir opiniones propias si el usuario solicita recomendaciones, pero sie
 - **Tipo de Alojamiento**: "Para tu estancia, ¿Te gustaría un hotel elegante, un acogedor apartamento, o tienes otra preferencia? ¿Cuál sería tu presupuesto aproximado?"
 (puedes utilizar otras variaciones de la misma pregunta, de esta manera puedes ser mas natural y no repetitiva)
 
-
 ### Clase y Asiento:
 - **Preferencias de Clase y Asiento**: "¿Te gustaría viajar en clase económica o prefieres un poco más de comodidad en clase ejecutiva? ¿Tienes alguna preferencia de asiento, como pasillo o ventana?"
 (puedes utilizar otras variaciones de la misma pregunta, de esta manera puedes ser mas natural y no repetitiva)
@@ -182,45 +181,99 @@ Si las preguntas obligatorias no han sido respondidas, no puedes finalizar la co
     """,
 }
 
-EXTRACTOR_SYSTEM_ROLE_TRAVEL = """
-    ## Integración y Respuestas Estructuradas
+meta_analysis = """
+{
+    user_sentiment (str) [positive, negative, neutral],
+    assistant_sentiment (str) [positive, negative, neutral],
+    sentiment_analysis: {
+        overall_sentiment (str),
+        sentiment_score (float)
+    },
+    topic_analysis (list): [
+        {
+            topic (str),
+            keywords (list)
+        }
+    ],
+    word_frequency_analysis: {
+        most_frequent_words (list),
+        word_counts (dict)
+    },
+    social_network_analysis: {
+        user_interactions (list): [
+            {
+                user (str),
+                messages_sent (int)
+            }
+        ]
+    },
+    emoji_analysis: {
+        most_used_emojis (list),
+        emoji_counts (dict)
+    },
+    named_entity_recognition: {
+        entities (list): [
+            {
+                type (str),
+                value (str)
+            }
+        ]
+    },
+    temporal_analysis: {
+        peak_activity_times (list)
+    },
+    participation_analysis: {
+        user_contributions (dict)
+    },
+    advanced_sentiment_analysis: {
+        emotions_detected (dict)
+    },
+    spam_detection: {
+        spam_messages (int),
+        non_spam_messages (int)
+    }
+}
+"""
 
-    - **Generación de JSON:** Estás programado para generar respuestas en formato JSON.
-    - **Esquema de Respuesta:** Organiza tus respuesta siguiendo el esquema 
-      {
-        travel_type (str), 
-        origins (list), 
-        destinations (list),
-        exact_dates,
-        start_date (format AAAA-MM-DD), 
-        end_date (format AAAA-MM-DD), 
-        exact_times, 
-        departure_time, 
-        arrival_time, 
-        departure_time_frame (format HH:mm), 
-        arrival_time_frame (format HH:mm), 
-        number_of_adults (int), 
-        number_of_children (int), 
-        price_range: {
-            min (int),
-            max (int)
-        },
-        price_per_person (int), 
-        transportation_type (str), 
-        accommodation (str), 
-        accommodation_type (str), 
-        accommodation_budget (int), 
-        class_preference (str), 
-        seat_preference (str), 
-        travel_requirements (str), 
-        additional_notes (str), 
-        request_summary (str),
-        title_of_request (str),
-      }.
-    - **Sin Dato:** Si no se proporciona un dato específico, el valor correspondiente en el JSON debe ser `null`.
-    - **Responde en el idioma del usuario, si es posible.**
-    """
+EXTRACTOR_SYSTEM_ROLE_TRAVEL = f"""
+## Integración y Respuestas Estructuradas
 
+- **Generación de JSON:** Estás programado para generar respuestas en formato JSON.
+- **Esquema de Respuesta:** Organiza tus respuesta siguiendo el esquema 
+  {{
+    travel_type (str), 
+    origins (list), 
+    destinations (list),
+    exact_dates (bool),
+    start_date (str, format AAAA-MM-DD), 
+    end_date (str, format AAAA-MM-DD), 
+    exact_times (bool), 
+    departure_time (str), 
+    arrival_time (str), 
+    departure_time_frame (str, format HH:mm), 
+    arrival_time_frame (str, format HH:mm), 
+    number_of_adults (int), 
+    number_of_children (int), 
+    price_range: {{
+        min (int),
+        max (int)
+    }},
+    price_per_person (int), 
+    transportation_type (str), 
+    accommodation (str), 
+    accommodation_type (str), 
+    accommodation_budget (int), 
+    class_preference (str), 
+    seat_preference (str), 
+    travel_requirements (str), 
+    additional_notes (str), 
+    request_summary (str),
+    title_of_request (str),
+    meta_analysis: {meta_analysis}
+  }}
+- **Sin Dato:** Si no se proporciona un dato específico, el valor correspondiente en el JSON debe ser `null`.
+- **Responde en el idioma del usuario, si es posible.**
+"""
 
 EXTRACTOR_SYSTEM_ROLE_CATERING = """
     ## Integración y Respuestas Estructuradas
