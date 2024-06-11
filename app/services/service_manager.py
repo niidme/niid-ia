@@ -51,7 +51,7 @@ class AsistenteDeServicioAsync:
                 },
                 {
                     'role': 'system',
-                    'content': f"El usuario ha indicado que el tipo de servicio es: {self.service_type}"
+                    'content': f"IMPORTANTE: El usuario ha indicado que el tipo de servicio es: {self.service_type}"
                 }
             ]
         await self.agregar_mensaje(user_id, {
