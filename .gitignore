@@ -1,17 +1,9 @@
-# Ignorar archivos y carpetas de caché de Python
 __pycache__/
 *.py[cod]
-*$py.class
-
-# Ignorar archivos y carpetas creados por distribuciones de paquetes
 *.egg-info/
 *.egg
 *.whl
-
-# Ignorar archivos de configuración de editores de código
 .vscode/
 .idea/
-
-# Ignorar archivos creados por herramientas de construcción
 build/
 dist/
