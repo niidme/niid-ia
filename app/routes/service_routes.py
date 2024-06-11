@@ -59,3 +59,44 @@ async def handle_service_request(service: str = Path(..., description="Categorí
                 await asyncio.sleep(retry_delay)  # Espera antes del próximo intento
             else:
                 raise HTTPException(status_code=500, detail=str(e))  # Lanza error después del último intento
+
+@service_router.post("/api/v1/extract-information", 
+                     tags=["🔮 AI Tools & Utilities"],
+                     response_description="Extrae información estructurada de la conversación del usuario y la devuelve en formato JSON.")
+async def extract_information_endpoint(
+        service: str = Body(..., description="El servicio asociado a la conversación."),
+        service_type: str = Body(..., description="Tipo de servicio que determinará el contexto de la extracción de información."),
+        user_id: str = Body(..., description="ID único del usuario cuya conversación se utilizará para la extracción de información.")
+    ):
+    """
+    💡 **Endpoint de Extracción de Información**
+
+    Este endpoint procesa la conversación completa de un usuario, excluyendo los mensajes del sistema, utilizando un modelo de IA configurado para devolver información estructurada en formato JSON, basado en el tipo de servicio especificado.
+    """
+    try:
+        # Utilizamos get_service_assistant para obtener la instancia del asistente
+        assistant = get_service_assistant(service, service_type)
+        
+        # Verificar si existe una conversación para el usuario
+        conversation = assistant.conversaciones.get(user_id)
+        if conversation is None:
+            raise HTTPException(status_code=404, detail=f"Conversación para el usuario '{user_id}' no encontrada")
+
+        # Filtrar y excluir mensajes donde el rol es 'system'
+        filtered_conversation = " ".join([message['content'] for message in conversation if message['role'] != 'system'])
+
+        # Log de inicio de extracción
+        logging.info(f"Extrayendo información para el servicio {service}, tipo {service_type} y el usuario {user_id}...")
+
+        # Inicialización y uso del extractor de información
+        extractor = ExtractorDeInformacionAsync(service)
+        extracted_information = await extractor.obtener_informacion(filtered_conversation, service_type)  # Pasar el travel_type correctamente
+        # Log de información extraída
+        logging.info(f"Información extraída para el servicio {service}, tipo {service_type} y el usuario {user_id} - Información: {extracted_information}")
+
+        return JSONResponse(status_code=200, content=extracted_information)
+    
+    except Exception as e:
+        # Log de error
+        logging.error(f"Error al extraer información: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
