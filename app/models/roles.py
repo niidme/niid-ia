@@ -231,8 +231,14 @@ meta_analysis = """
     spam_detection: {
         spam_messages (int),
         non_spam_messages (int)
+    },
+    language_analysis: {
+        language (str),
+        language_score (float)
+    },
+    llm_prompt_injection_detection: {
+        prompts_detected (int)
     }
-}
 """
 
 EXTRACTOR_SYSTEM_ROLE_TRAVEL = f"""
